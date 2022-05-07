@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>
+        Primer Parcial
+    </title>
+    <script>
+        class Persona {
+            constructor(id, dni, apellido, nombre) {
+                this.id = id;
+                this.dni = dni;
+                this.apellido = apellido;
+                this.nombre = nombre;
+            };
+            toString() {
+                return "Id: " + this.id + ", Dni: " + this.dni + ", Apellido: " + this.apellido + ", Nombre: " + this.nombre;
+            };
+        };
+        class Alumno extends Persona {
+            constructor(id, dni, apellido, nombre, cursoLetra, cursoNumero) {
+                super(id, dni, apellido, nombre);
+                this.cursoLetra = cursoLetra;
+                this.cursoNumero = cursoNumero;
+            };
+            toString() {
+                let baseString = super.toString();
+                return baseString + ", Curso: " + this.cursoLetra + ", Numero: " + this.cursoNumero;
+            };
+        };
+        class Docente extends Persona {
+            constructor(id, dni, apellido, nombre, materia, año) {
+                super(id, dni, apellido, nombre);
+                this.materia = materia;
+                this.año = año;
+            };
+            toString() {
+                let baseString = super.toString();
+                return baseString + ", Materia: " + this.materia + ", Año: " + this.año;
+            };
+        };
+        let personasJson = '[{"id":1,"dni":17663295,"nombre":"FABIAN MARCELO","apellido":"ABADIE","cursoNumero":1,"cursoLetra":"F"},' +
+            '{"id":2,"dni":38724762,"nombre":"MAIRA DAIANA","apellido":"ABALOS","cursoNumero":3,"cursoLetra":"M"},' +
+            '{"id":3,"dni":25447357,"nombre":"NOELIA LIDIA","apellido":"ABBA","cursoNumero":2,"cursoLetra":"N"},' +
+            '{"id":4,"dni":27577699,"nombre":"MARÍA SOLEDAD","apellido":"ACHOR","cursoNumero":2,"cursoLetra":"M"},' +
+            '{"id":900,"dni":11496581,"nombre":"JOSE MIGUEL","apellido":"ARMALEO","materia":"Fisica","año":1},' +
+            '{"id":899,"dni":35326658,"nombre":"ROSA DEL VALLE","apellido":"LOPEZ","materia":"Lengua","año":3},' +
+            '{"id":898,"dni":39638351,"nombre":"DANIELA BELEN","apellido":"BROGGI D`ATENA","materia":"Matematica","año":3},' +
+            '{"id":897,"dni":17275566,"nombre":"PABLO ALBERTO","apellido":"ALMEIDA","materia":"Quimica","año":1}]';
+        let personasObj = JSON.parse(personasJson);
+
+        let personasOk = personasObj.map(persona => {
+            if (JSON.stringify(persona).includes("materia")) {
+                return new Docente(persona.id, persona.dni, persona.apellido, persona.nombre, persona.materia, persona.año);
+            } else {
+                return new Alumno(persona.id, persona.dni, persona.apellido, persona.nombre, persona.cursoLetra, persona.cursoNumero);
+            }
+        });
+
+        let headersTable = ['id', 'dni', 'apellido', 'nombre', 'cursoNumero', 'cursoLetra', 'materia', 'año'];
+
+        function filtrarJson(personas, filtro) {
+            if (filtro == 'Todos') {
+                return personas;
+            }
+            return personas.filter(persona => persona.constructor.name === filtro);
+        };
+
+        function mostrarPromedioIds() {
+            let personasMostradas = filtrarJson(personasOk, document.getElementById("filter").value);
+            let sumaDni = 0;
+            sumaDni = personasMostradas.reduce(function (a, b) { return a + b.dni }, 0);
+            document.getElementById("promedioId").value = sumaDni / personasMostradas.length;
+        };
+
+        function modificarTabla(idCheckbox) {
+            let estadoCheckbox = document.getElementById(idCheckbox).checked;
+            let headerFiltrado = headersTable.filter(element => element != idCheckbox || estadoCheckbox && idCheckbox == element);
+            handlerLoad(headerFiltrado);
+        };
+
+        window.addEventListener("DOMContentLoaded", () => {
+            handlerLoad(headersTable);
+        });
+
+        function handlerLoad(headers) {
+            let filterValue = document.getElementById("filter").value;
+            let personasFiltradas = filtrarJson(personasOk, filterValue);
+            renderizarLista(crearTabla(personasFiltradas, filterValue, headers), document.getElementById("divTabla"));
+        };
+
+        function crearTabla(items, filterValue, headers) {
+            const tabla = document.createElement('table');
+            tabla.appendChild(crearThead(headers));
+            tabla.appendChild(crearTbody(items, headers));
+
+            return tabla;
+        }
+
+        function crearThead(item) {
+            const thead = document.createElement('thead');
+            const tr = document.createElement('tr');
+
+            item.forEach(element => {
+                const th = document.createElement('th');
+                th.id = element;
+                const button = document.createElement('button');
+                button.addEventListener("click", ordenarTabla);
+                button.textContent = element.toUpperCase();
+                th.appendChild(button);
+                tr.appendChild(th);
+            });
+
+            thead.appendChild(tr);
+            return thead;
+        }
+
+        function crearTbody(items, headers) {
+            const tbody = document.createElement('tbody');
+
+            items.forEach((element) => {
+                const tr = document.createElement('tr');
+                headers.forEach(header => {
+                    const td = document.createElement('td');
+                    const value = element[header];
+                    td.textContent = value == undefined ? 'N/A' : value;
+                    tr.appendChild(td);
+                });
+                tbody.appendChild(tr);
+            });
+
+            return tbody;
+        }
+
+        function renderizarLista(lista, contenedor) {
+
+            while (contenedor.hasChildNodes()) {
+                contenedor.removeChild(contenedor.firstChild);
+            }
+
+            if (lista) {
+                contenedor.appendChild(lista);
+            }
+        };
+
+        function modificarTablaSelect() {
+            document.getElementById("promedioId").value = "";
+            handlerLoad(headersTable);
+        };
+
+        function ordenarTabla() {
+            let filterValue = document.getElementById("filter").value;
+            let personasMostradas = filtrarJson(personasOk, filterValue);
+            let th = event.target.parentNode;
+            switch (th.id) {
+                case "id":
+                    personasMostradas.sort((a, b) => {
+                        if (a.id > b.id) {
+                            return 1;
+                        } else if (a.id == b.id) {
+                            return 0;
+                        } else {
+                            return -1;
+                        }
+                    })
+                    break;
+                case "dni":
+                    personasMostradas.sort((a, b) => {
+                        if (a.dni > b.dni) {
+                            return 1;
+                        } else if (a.dni == b.dni) {
+                            return 0;
+                        } else {
+                            return -1;
+                        }
+                    })
+                    break;
+                case "apellido":
+                    personasMostradas.sort((a, b) => {
+                        if (a.apellido > b.apellido) {
+                            return 1;
+                        } else if (a.apellido == b.apellido) {
+                            return 0;
+                        } else {
+                            return -1;
+                        }
+                    })
+                    break;
+                case "nombre":
+                    personasMostradas.sort((a, b) => {
+                        if (a.nombre > b.nombre) {
+                            return 1;
+                        } else if (a.nombre == b.nombre) {
+                            return 0;
+                        } else {
+                            return -1;
+                        }
+                    })
+                    break;
+                case "cursoNumero":
+                    personasMostradas.sort((a, b) => {
+                        if (a.cursoNumero > b.cursoNumero) {
+                            return 1;
+                        } else if (a.cursoNumero == b.cursoNumero) {
+                            return 0;
+                        } else {
+                            return -1;
+                        }
+                    })
+                    break;
+                case "cursoLetra":
+                    personasMostradas.sort((a, b) => {
+                        if (a.cursoLetra > b.cursoLetra) {
+                            return 1;
+                        } else if (a.cursoLetra == b.cursoLetra) {
+                            return 0;
+                        } else {
+                            return -1;
+                        }
+                    })
+                    break;
+                case "materia":
+                    personasMostradas.sort((a, b) => {
+                        if (a.materia > b.materia) {
+                            return 1;
+                        } else if (a.materia == b.materia) {
+                            return 0;
+                        } else {
+                            return -1;
+                        }
+                    })
+                    break;
+                case "año":
+                    personasMostradas.sort((a, b) => {
+                        if (a.año > b.año) {
+                            return 1;
+                        } else if (a.año == b.año) {
+                            return 0;
+                        } else {
+                            return -1;
+                        }
+                    })
+                    break;
+            }
+            renderizarLista(crearTabla(personasMostradas, filterValue, headersTable), document.getElementById("divTabla"));
+        };
+
+        function mostrarFormAlta() {
+            document.getElementById('divAlta').style.display = 'table-cell';
+        };
+
+        function altaPersona() {
+            let filterValue = document.getElementById("filter").value;
+            let id = form['idInput'].value;
+            let dni = form['dniInput'].value;
+            let apellido = form['apellidoInput'].value;
+            let nombre = form['nombreInput'].value;
+            let tipo = form['tipoInput'].value;
+            let cursoLetra = form['cursoLetraInput'].value;
+            let cursoNumero = form['cursoNumeroInput'].value;
+            let materia = form['materiaInput'].value;
+            let año = form['añoINput'].value;
+
+            if (apellido && nombre) {
+                for (const persona in personasOk) {
+                    if (dni == persona.dni) {
+                        alert("Existe una persona registrada con esos datos");
+                        return;
+                    }
+                }
+            } else {
+                alert("Falta ingresar datos");
+            }
+
+            if (tipo == "docente") {
+                if (materia && año) {
+                    let nuevoDocente = new docente(id, dni, apellido, nombre, materia, año);
+                    personasOk.push(nuevoDocente);
+                    console.log(nuevoDocente.toString());
+                    renderizarLista(crearTabla(personasOk, filterValue, headersTable), document.getElementById("divTabla"));
+                } else {
+                    alert("Falta ingresar datos");
+                }
+            } else {
+                if (cursoLetra && cursoNumero) {
+                    let alumnoNuevo = new alumno(id, dni, apellido, nombre, cursoNumero, cursoLetra);
+                    personasOk.push(alumnoNuevo);
+                    console.log(alumnoNuevo.toString());
+                    renderizarLista(crearTabla(personasOk, filterValue, headersTable), document.getElementById("divTabla"));
+                } else {
+                    alert("Falta ingresar datos");
+                }
+            }
+            ocultarForm();
+        };
+
+        function limpiarForm() {
+            document.getElementById("idInput").value = "";
+            document.getElementById("dniInput").value = "";
+            document.getElementById("apellidoInput").value = "";
+            document.getElementById("nombreInput").value = "";
+            document.getElementById("cursoLetraInput").value = "";
+            document.getElementById("cursoNumeroInput").value = "";
+            document.getElementById("materiaInput").value = "";
+            document.getElementById("añoInput").value = "";
+        }
+
+        function ocultarForm() {
+            limpiarForm();
+            document.getElementById('divAlta').style.display = 'none';
+        }
+    </script>
+</head>
+
+<body>
+    <div>
+        <h1>Form Datos</h1>
+        <div>
+            <label>Filtrar por: </label>
+            <select id="filter" name="personas" onchange="modificarTablaSelect();">
+                <option value="Todos">Todos</option>
+                <option value="Alumno">Alumnos</option>
+                <option value="Docente">Docentes</option>
+            </select>
+        </div>
+        <br>
+        <div>
+            <label>Valor Promedio IDs: </label>
+            <input type="text" id="promedioId" readonly style="text-align: right;">
+            <input type="button" value="calcular" id="btnCalcular" onclick="mostrarPromedioIds();">
+        </div>
+        <br>
+        <div>
+            <input type="checkbox" id="id" value="id" checked onclick="modificarTabla('id');">
+            <label> ID </label>
+            <input type="checkbox" id="dni" value="dni" checked onclick="modificarTabla('dni');">
+            <label> DNI </label>
+            <input type="checkbox" id="apellido" value="apellido" checked
+                onclick="modificarTabla('apellido', 'idThApellido');">
+            <label> APELLIDO</label>
+            <input type="checkbox" id="nombre" value="nombre" checked onclick="modificarTabla('nombre');">
+            <label> NOMBRE </label>
+            <input type="checkbox" id="cursoNumero" value="cursoNumero" checked
+                onclick="modificarTabla('cursoNumero');">
+            <label> CURSO NUMERO </label>
+            <input type="checkbox" id="cursoLetra" value="cursoLetra" checked onclick="modificarTabla('cursoLetra');">
+            <label> CURSO LETRA </label>
+            <input type="checkbox" id="materia" value="materia" checked onclick="modificarTabla('materia');">
+            <label> MATERIA </label>
+            <input type="checkbox" id="año" value="año" checked onclick="modificarTabla('año');">
+            <label> AÑO </label>
+        </div>
+        <br>
+        <div id="divTabla"></div>
+        <input type="button" value="Agregar" id="btnAgregar" onclick="mostrarFormAlta();">
+
+        <div id="divAlta" style="display: none;">
+            <form id="formAlta" method="post">
+                <h2>Form Modificacion/Eliminacion</h2>
+                <label>Id:</label>
+                <br>
+                <input type="text" id="idInput" required>
+
+                <br>
+                <label>Dni:</label>
+                <br>
+                <input type="text" id="dniInput" required>
+
+                <br>
+                <label>Apellido:</label>
+                <br>
+                <input type="text" id="apellidoInput" required>
+
+                <br>
+                <label>Nombre:</label>
+                <br>
+                <input type="text" id="nombreInput" required>
+
+                <br>
+                <br>
+                <label>Tipo:</label>
+                <select name="tipoInput" id="tipoInput" required>
+                    <option value="alumno" selected="selected">Alumno</option>
+                    <option value="docente">Docente</option>
+                </select>
+
+                <div>
+                    <br>
+                    <label>Curso letra:</label>
+                    <br>
+                    <input type="text" id="cursoLetraInput">
+
+                    <br>
+                    <label id="lblCursoNumero">Curso Numero:</label>
+                    <br>
+                    <input type="number" id="cursoNumeroInput">
+                </div>
+
+                <div>
+                    <br>
+                    <label>Materia:</label>
+                    <br>
+                    <input type="text" id="materiaInput">
+
+                    <br>
+                    <label>Año:</label>
+                    <br>
+                    <input type="number" id="añoInput">
+                </div>
+
+                <br>
+                <input type="submit" id="btnAgregarAlta" value="Agregar" onclick="altaPersona();">;
+                <input type="button" id="btnModificar" value="Modificar">
+                <input type="button" id="btnEliminar" value="Eliminar">
+                <input type="button" id="btnCancelar" value="Cancelar" onclick="ocultarForm();">
+            </form>
+
+        </div>
+    </div>
+</body>
+<footer>
+
+</footer>
+
+</html>
