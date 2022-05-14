@@ -1,79 +1,162 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>
-        Primer Parcial
-    </title>
-    <script>
-        class Persona {
-            constructor(id, dni, apellido, nombre) {
-                this.id = id;
-                this.dni = dni;
-                this.apellido = apellido;
-                this.nombre = nombre;
-            };
-            toString() {
-                return "Id: " + this.id + ", Dni: " + this.dni + ", Apellido: " + this.apellido + ", Nombre: " + this.nombre;
-            };
-        };
-        class Alumno extends Persona {
-            constructor(id, dni, apellido, nombre, cursoLetra, cursoNumero) {
-                super(id, dni, apellido, nombre);
-                this.cursoLetra = cursoLetra;
-                this.cursoNumero = cursoNumero;
-            };
-            toString() {
-                let baseString = super.toString();
-                return baseString + ", Curso: " + this.cursoLetra + ", Numero: " + this.cursoNumero;
-            };
-        };
-        class Docente extends Persona {
-            constructor(id, dni, apellido, nombre, materia, año) {
-                super(id, dni, apellido, nombre);
-                this.materia = materia;
-                this.año = año;
-            };
-            toString() {
-                let baseString = super.toString();
-                return baseString + ", Materia: " + this.materia + ", Año: " + this.año;
-            };
-        };
-        let personasJson = '[{"id":1,"dni":17663295,"nombre":"FABIAN MARCELO","apellido":"ABADIE","cursoNumero":1,"cursoLetra":"F"},' +
-            '{"id":2,"dni":38724762,"nombre":"MAIRA DAIANA","apellido":"ABALOS","cursoNumero":3,"cursoLetra":"M"},' +
-            '{"id":3,"dni":25447357,"nombre":"NOELIA LIDIA","apellido":"ABBA","cursoNumero":2,"cursoLetra":"N"},' +
-            '{"id":4,"dni":27577699,"nombre":"MARÍA SOLEDAD","apellido":"ACHOR","cursoNumero":2,"cursoLetra":"M"},' +
-            '{"id":900,"dni":11496581,"nombre":"JOSE MIGUEL","apellido":"ARMALEO","materia":"Fisica","año":1},' +
-            '{"id":899,"dni":35326658,"nombre":"ROSA DEL VALLE","apellido":"LOPEZ","materia":"Lengua","año":3},' +
-            '{"id":898,"dni":39638351,"nombre":"DANIELA BELEN","apellido":"BROGGI D`ATENA","materia":"Matematica","año":3},' +
-            '{"id":897,"dni":17275566,"nombre":"PABLO ALBERTO","apellido":"ALMEIDA","materia":"Quimica","año":1}]';
-        let personasObj = JSON.parse(personasJson);
+    <style>
+        body {
+            font-family: 'Open Sans', sans-serif;
+            font-weight: 300;
+            line-height: 1.30em;
+        }
 
-        let personasOk = personasObj.map(persona => {
-            if (JSON.stringify(persona).includes("materia")) {
-                return new Docente(persona.id, persona.dni, persona.apellido, persona.nombre, persona.materia, persona.año);
+        .titulo {
+            font-size: 3em;
+            font-weight: 300;
+            text-align: center;
+        }
+
+        .content {
+            text-align: left;
+            overflow: hidden;
+            width: 70%;
+            margin: 0 auto;
+            display: table;
+
+        }
+
+        .tabla {
+            display: table;
+            overflow: hidden;
+            width: 100%;
+        }
+
+        .tabla td {
+            font-weight: normal;
+            font-size: 1em;
+        }
+
+        .tabla td,
+        .tabla th {
+            padding: 1%;
+            text-align: center;
+        }
+
+        .tabla tr:hover {
+            background-color: #c1c6cf;
+        }
+
+        .header :hover {
+            background-color: #ffffff !important;
+        }
+
+        .boton {
+            height: 30px;
+            padding: 5px 10px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            display: inline-block;
+            outline: none;
+            border-radius: 5px;
+            border: none;
+            background: #c1c6cf;
+        }
+
+        .boton:active {
+            top: 5px;
+        }
+
+        .alta {
+            width: 50%;
+        }
+
+        form {
+            background-color: #c1c6cf;
+            border-radius: 8px;
+        }
+
+        .inpurForm {
+            margin-left: 15px;
+        }
+
+        input {
+            border-radius: 4px;
+        }
+
+        select {
+            border-radius: 8px;
+        }
+    </style>
+    <script>
+        class vehiculo {
+            constructor(id, modelo, añoFabricacion, velocidadMaxima) {
+                this.id = id;
+                this.modelo = modelo;
+                this.añoFabricacion = añoFabricacion;
+                this.velocidadMaxima = velocidadMaxima;
+            };
+            toString() {
+                return "Id: " + this.id + ", Modelo: " + this.modelo + ", AñoFabricacion: " + this.añoFabricacion + ", VelocidadMaxima: " + this.velocidadMaxima;
+            };
+        };
+        class Aereo extends vehiculo {
+            constructor(id, modelo, añoFabricacion, velocidadMaxima, alturaMaxima, autonomia) {
+                super(id, modelo, añoFabricacion, velocidadMaxima);
+                this.alturaMaxima = alturaMaxima;
+                this.autonomia = autonomia;
+            };
+            toString() {
+                let baseString = super.toString();
+                return baseString + ", AlturaMaxima: " + this.alturaMaxima + ", Autonomia: " + this.autonomia;
+            };
+        };
+        class Terrestre extends vehiculo {
+            constructor(id, modelo, añoFabricacion, velocidadMaxima, cantidadPuertas, cantidadRuedas) {
+                super(id, modelo, añoFabricacion, velocidadMaxima);
+                this.cantidadPuertas = cantidadPuertas;
+                this.cantidadRuedas = cantidadRuedas;
+            };
+            toString() {
+                let baseString = super.toString();
+                return baseString + ", CantidadPuertas: " + this.cantidadPuertas + ", CantidadRuedas: " + this.cantidadRuedas;
+            };
+        };
+        let vehiculosJson = '[{"id":14, "modelo":"Ferrari F100", "anoFab":1998, "velMax":400, "cantPue":2,' +
+            '"cantRue":4},{"id":51, "modelo":"Dodge Viper", "anoFab":1991, "velMax":266,' +
+            '"cantPue":2, "cantRue":4},{"id":67, "modelo":"Boeing CH-47 Chinook",' +
+            '"anoFab":1962, "velMax":302, "altMax":6, "autonomia":1200},{"id":666,' +
+            '"modelo":"Aprilia RSV 1000 R", "anoFab":2004, "velMax":280, "cantPue":0,' +
+            '"cantRue":2},{"id":872, "modelo":"Boeing 747-400", "anoFab":1989, "velMax":988,' +
+            '"altMax":13, "autonomia":13450},{"id":742, "modelo":"Cessna CH-1 SkyhookR",' +
+            '"anoFab":1953, "velMax":174, "altMax":3, "autonomia":870}]';
+        let vehiculosObj = JSON.parse(vehiculosJson);
+
+        let vehiculoOk = vehiculosObj.map(vehiculo => {
+            if (JSON.stringify(vehiculo).includes("autonomia")) {
+                return new Aereo(vehiculo.id, vehiculo.modelo, vehiculo.anoFab, vehiculo.velMax, vehiculo.altMax, vehiculo.autonomia);
             } else {
-                return new Alumno(persona.id, persona.dni, persona.apellido, persona.nombre, persona.cursoLetra, persona.cursoNumero);
+                return new Terrestre(vehiculo.id, vehiculo.modelo, vehiculo.anoFab, vehiculo.velMax, vehiculo.cantPue, vehiculo.cantRue);
             }
         });
 
-        let headersTable = ['id', 'dni', 'apellido', 'nombre', 'cursoNumero', 'cursoLetra', 'materia', 'año'];
+        let headersTable = ['id', 'modelo', 'añoFabricacion', 'velocidadMaxima', 'alturaMaxima', 'autonomia', 'cantidadPuertas', 'cantidadRuedas'];
 
-        function filtrarJson(personas, filtro) {
+        function filtrarJson(vehiculos, filtro) {
             if (filtro == 'Todos') {
-                return personas;
+                return vehiculos;
             }
-            return personas.filter(persona => persona.constructor.name === filtro);
+            return vehiculos.filter(vehiculo => vehiculo.constructor.name === filtro);
         };
 
         function mostrarPromedioIds() {
-            let personasMostradas = filtrarJson(personasOk, document.getElementById("filter").value);
-            let sumaDni = 0;
-            sumaDni = personasMostradas.reduce(function (a, b) { return a + b.dni }, 0);
-            document.getElementById("promedioId").value = sumaDni / personasMostradas.length;
+            let vehiculosMostrados = filtrarJson(vehiculoOk, document.getElementById("filter").value);
+            let sumaVelocidadMaxima = 0;
+            sumaVelocidadMaxima = vehiculosMostrados.reduce(function (a, b) { return a + b.velocidadMaxima }, 0);
+            document.getElementById("promedioId").value = (sumaVelocidadMaxima / vehiculosMostrados.length).toFixed(2);
         };
 
         function modificarTabla(idCheckbox) {
@@ -84,16 +167,18 @@
 
         window.addEventListener("DOMContentLoaded", () => {
             handlerLoad(headersTable);
+            document.getElementById('divAlta').style.display = "none";
         });
 
         function handlerLoad(headers) {
             let filterValue = document.getElementById("filter").value;
-            let personasFiltradas = filtrarJson(personasOk, filterValue);
-            renderizarLista(crearTabla(personasFiltradas, filterValue, headers), document.getElementById("divTabla"));
+            let vehiculosFiltradas = filtrarJson(vehiculoOk, filterValue);
+            renderizarLista(crearTabla(vehiculosFiltradas, filterValue, headers), document.getElementById("divTabla"));
         };
 
         function crearTabla(items, filterValue, headers) {
             const tabla = document.createElement('table');
+            tabla.classList.add("tabla");
             tabla.appendChild(crearThead(headers));
             tabla.appendChild(crearTbody(items, headers));
 
@@ -102,12 +187,14 @@
 
         function crearThead(item) {
             const thead = document.createElement('thead');
+            thead.classList.add("header");
             const tr = document.createElement('tr');
 
             item.forEach(element => {
                 const th = document.createElement('th');
                 th.id = element;
                 const button = document.createElement('button');
+                button.classList.add("boton");
                 button.addEventListener("click", ordenarTabla);
                 button.textContent = element.toUpperCase();
                 th.appendChild(button);
@@ -123,6 +210,7 @@
 
             items.forEach((element) => {
                 const tr = document.createElement('tr');
+                tr.addEventListener("dblclick", Modificar);
                 headers.forEach(header => {
                     const td = document.createElement('td');
                     const value = element[header];
@@ -153,11 +241,11 @@
 
         function ordenarTabla() {
             let filterValue = document.getElementById("filter").value;
-            let personasMostradas = filtrarJson(personasOk, filterValue);
+            let vehiculosMostrados = filtrarJson(vehiculoOk, filterValue);
             let th = event.target.parentNode;
             switch (th.id) {
                 case "id":
-                    personasMostradas.sort((a, b) => {
+                    vehiculosMostrados.sort((a, b) => {
                         if (a.id > b.id) {
                             return 1;
                         } else if (a.id == b.id) {
@@ -167,77 +255,77 @@
                         }
                     })
                     break;
-                case "dni":
-                    personasMostradas.sort((a, b) => {
-                        if (a.dni > b.dni) {
+                case "modelo":
+                    vehiculosMostrados.sort((a, b) => {
+                        if (a.modelo > b.modelo) {
                             return 1;
-                        } else if (a.dni == b.dni) {
+                        } else if (a.modelo == b.modelo) {
                             return 0;
                         } else {
                             return -1;
                         }
                     })
                     break;
-                case "apellido":
-                    personasMostradas.sort((a, b) => {
-                        if (a.apellido > b.apellido) {
+                case "añoFabricacion":
+                    vehiculosMostrados.sort((a, b) => {
+                        if (a.añoFabricacion > b.añoFabricacion) {
                             return 1;
-                        } else if (a.apellido == b.apellido) {
+                        } else if (a.añoFabricacion == b.añoFabricacion) {
                             return 0;
                         } else {
                             return -1;
                         }
                     })
                     break;
-                case "nombre":
-                    personasMostradas.sort((a, b) => {
-                        if (a.nombre > b.nombre) {
+                case "velocidadMaxima":
+                    vehiculosMostrados.sort((a, b) => {
+                        if (a.velocidadMaxima > b.velocidadMaxima) {
                             return 1;
-                        } else if (a.nombre == b.nombre) {
+                        } else if (a.velocidadMaxima == b.velocidadMaxima) {
                             return 0;
                         } else {
                             return -1;
                         }
                     })
                     break;
-                case "cursoNumero":
-                    personasMostradas.sort((a, b) => {
-                        if (a.cursoNumero > b.cursoNumero) {
+                case "alturaMaxima":
+                    vehiculosMostrados.sort((a, b) => {
+                        if (a.alturaMaxima > b.alturaMaxima) {
                             return 1;
-                        } else if (a.cursoNumero == b.cursoNumero) {
+                        } else if (a.alturaMaxima == b.alturaMaxima) {
                             return 0;
                         } else {
                             return -1;
                         }
                     })
                     break;
-                case "cursoLetra":
-                    personasMostradas.sort((a, b) => {
-                        if (a.cursoLetra > b.cursoLetra) {
+                case "autonomia":
+                    vehiculosMostrados.sort((a, b) => {
+                        if (a.autonomia > b.autonomia) {
                             return 1;
-                        } else if (a.cursoLetra == b.cursoLetra) {
+                        } else if (a.autonomia == b.autonomia) {
                             return 0;
                         } else {
                             return -1;
                         }
                     })
                     break;
-                case "materia":
-                    personasMostradas.sort((a, b) => {
-                        if (a.materia > b.materia) {
+                case "cantidadPuertas":
+                    vehiculosMostrados.sort((a, b) => {
+                        if (a.cantidadPuertas > b.cantidadPuertas) {
                             return 1;
-                        } else if (a.materia == b.materia) {
+                        } else if (a.cantidadPuertas == b.cantidadPuertas) {
                             return 0;
                         } else {
                             return -1;
                         }
                     })
                     break;
-                case "año":
-                    personasMostradas.sort((a, b) => {
-                        if (a.año > b.año) {
+                case "cantidadRuedas":
+                    vehiculosMostrados.sort((a, b) => {
+                        if (a.cantidadRuedas > b.cantidadRuedas) {
                             return 1;
-                        } else if (a.año == b.año) {
+                        } else if (a.cantidadRuedas == b.cantidadRuedas) {
                             return 0;
                         } else {
                             return -1;
@@ -245,184 +333,336 @@
                     })
                     break;
             }
-            renderizarLista(crearTabla(personasMostradas, filterValue, headersTable), document.getElementById("divTabla"));
+            renderizarLista(crearTabla(vehiculosMostrados, filterValue, headersTable), document.getElementById("divTabla"));
         };
 
         function mostrarFormAlta() {
-            document.getElementById('divAlta').style.display = 'table-cell';
+            let filterValue = document.getElementById("filter").value;
+            let vehiculosMostrados = filtrarJson(vehiculoOk, filterValue);
+            let idAutoIncremental = Math.max.apply(Math, vehiculosMostrados.map(function (o) { return o.id; })) + 1;
+            if (document.getElementById('divAlta').style.display == "none") {
+                document.getElementById('divAlta').style.display = "block";
+                document.getElementById('divTerrestreInput').style.display = "none";
+                document.getElementById('idInput').value = idAutoIncremental;
+                document.getElementById('btnAgregarAlta').disabled = false;
+                document.getElementById('btnModificar').disabled = true;
+                document.getElementById('btnEliminar').disabled = true;
+            }
+            else {
+                document.getElementById('divAlta').style.display = "none";
+            }
         };
 
-        function altaPersona() {
+        function altaVehiculo() {
             let filterValue = document.getElementById("filter").value;
+            let form = document.getElementById("formAlta");
             let id = form['idInput'].value;
-            let dni = form['dniInput'].value;
-            let apellido = form['apellidoInput'].value;
-            let nombre = form['nombreInput'].value;
+            let modelo = form['modeloInput'].value;
+            let añoFabricacion = form['añoFabricacionInput'].value;
+            let velocidadMaxima = form['velocidadMaximaInput'].value;
             let tipo = form['tipoInput'].value;
-            let cursoLetra = form['cursoLetraInput'].value;
-            let cursoNumero = form['cursoNumeroInput'].value;
-            let materia = form['materiaInput'].value;
-            let año = form['añoINput'].value;
-
-            if (apellido && nombre) {
-                for (const persona in personasOk) {
-                    if (dni == persona.dni) {
-                        alert("Existe una persona registrada con esos datos");
+            let autonomia = form['autonomiaInput'].value;
+            let alturaMaxima = form['alturaMaximaInput'].value;
+            let cantidadPuertas = form['cantidadPuertasInput'].value;
+            let cantidadRuedas = form['cantidadRuedasInput'].value;
+            if (añoFabricacion && velocidadMaxima) {
+                for (let i = 0; i < vehiculoOk.length; i++) {
+                    if (modelo == vehiculo.modelo) {
+                        alert("Existe un vehiculo registrado con esos datos");
                         return;
+                    }
+                }
+                if (añoFabricacion < 1800) {
+                    alert("Año de fabricacion incorrecto");
+                    return;
+                }
+                if (tipo == "terrestre") {
+                    if (cantidadPuertas && cantidadRuedas) {
+                        if (cantidadPuertas < 0 || cantidadPuertas < 0) {
+                            alert("cantidadPuertas o cantidadPuertas incorrecto");
+                            return;
+                        }
+                        let nuevoTerrestre = new Terrestre(id, modelo, añoFabricacion, velocidadMaxima, cantidadPuertas, cantidadRuedas);
+                        vehiculoOk.push(nuevoTerrestre);
+                        console.log(nuevoTerrestre.toString());
+                        renderizarLista(crearTabla(vehiculoOk, filterValue, headersTable), document.getElementById("divTabla"));
+                    } else {
+                        alert("Falta ingresar datos");
+                    }
+                } else {
+                    if (autonomia && alturaMaxima) {
+                        if (velocidadMaxima < 0 || autonomia < 0) {
+                            alert("velocidadMaxima o autonomia incorrecto");
+                            return;
+                        }
+                        let alumnoNuevo = new Aereo(id, modelo, añoFabricacion, velocidadMaxima, alturaMaxima, autonomia);
+                        vehiculoOk.push(alumnoNuevo);
+                        console.log(alumnoNuevo.toString());
+                        renderizarLista(crearTabla(vehiculoOk, filterValue, headersTable), document.getElementById("divTabla"));
+                    } else {
+                        alert("Falta ingresar datos");
                     }
                 }
             } else {
                 alert("Falta ingresar datos");
             }
+            ocultarForm();
+        };
 
-            if (tipo == "docente") {
-                if (materia && año) {
-                    let nuevoDocente = new docente(id, dni, apellido, nombre, materia, año);
-                    personasOk.push(nuevoDocente);
-                    console.log(nuevoDocente.toString());
-                    renderizarLista(crearTabla(personasOk, filterValue, headersTable), document.getElementById("divTabla"));
-                } else {
-                    alert("Falta ingresar datos");
+        function bajaVehiculo() {
+            let filterValue = document.getElementById("filter").value;
+            let id = document.getElementById("idInput").value;
+            for (let i = 0; i < vehiculoOk.length; i++) {
+                if (id == vehiculoOk[i].id) {
+                    vehiculoOk.splice(i, 1);
+                    renderizarLista(crearTabla(vehiculoOk, filterValue, headersTable), document.getElementById("divTabla"));
+                    ocultarForm();
+                    return;
                 }
-            } else {
-                if (cursoLetra && cursoNumero) {
-                    let alumnoNuevo = new alumno(id, dni, apellido, nombre, cursoNumero, cursoLetra);
-                    personasOk.push(alumnoNuevo);
-                    console.log(alumnoNuevo.toString());
-                    renderizarLista(crearTabla(personasOk, filterValue, headersTable), document.getElementById("divTabla"));
-                } else {
-                    alert("Falta ingresar datos");
+            }
+        };
+
+        function modificarVehiculo() {
+            let filterValue = document.getElementById("filter").value;
+            let form = document.getElementById("formAlta");
+            let id = form['idInput'].value;
+            let modelo = form['modeloInput'].value;
+            let añoFabricacion = form['añoFabricacionInput'].value;
+            let velocidadMaxima = form['velocidadMaximaInput'].value;
+            let tipo = form['tipoInput'].value;
+            let autonomia = form['autonomiaInput'].value;
+            let alturaMaxima = form['alturaMaximaInput'].value;
+            let cantidadPuertas = form['cantidadPuertasInput'].value;
+            let cantidadRuedas = form['cantidadRuedasInput'].value;
+            if (modelo && añoFabricacion) {
+                for (let i = 0; i < vehiculoOk.length; i++) {
+                    if (id == vehiculoOk[i].id) {
+                        if (añoFabricacion < 1800) {
+                            alert("Año de fabricacion incorrecto");
+                            return;
+                        }
+                        vehiculoOk[i].modelo = modelo;
+                        vehiculoOk[i].añoFabricacion = añoFabricacion;
+
+                        if (tipo == 'aereo') {
+                            if (velocidadMaxima && autonomia) {
+                                if (velocidadMaxima < 0 || autonomia < 0) {
+                                    alert("velocidadMaxima o autonomia incorrecto");
+                                    return;
+                                }
+                                vehiculoOk[i].velocidadMaxima = velocidadMaxima;
+                                vehiculoOk[i].autonomia = autonomia;
+                                renderizarLista(crearTabla(vehiculoOk, filterValue, headersTable), document.getElementById("divTabla"));
+                            } else {
+                                alert("Campos incompletos");
+                            }
+                        }
+                        else {
+                            if (cantidadPuertas && cantidadRuedas) {
+                                if (cantidadPuertas < 0 || cantidadPuertas < 0) {
+                                    alert("cantidadPuertas o cantidadPuertas incorrecto");
+                                    return;
+                                }
+                                vehiculoOk[i].cantidadPuertas = cantidadPuertas;
+                                vehiculoOk[i].cantidadRuedas = cantidadRuedas;
+                                renderizarLista(crearTabla(vehiculoOk, filterValue, headersTable), document.getElementById("divTabla"));
+                            } else {
+                                alert("Campos incompletos");
+                            }
+                        }
+                    }
                 }
+            }
+            else {
+                alert("Campos incompletos");
             }
             ocultarForm();
         };
 
         function limpiarForm() {
             document.getElementById("idInput").value = "";
-            document.getElementById("dniInput").value = "";
-            document.getElementById("apellidoInput").value = "";
-            document.getElementById("nombreInput").value = "";
-            document.getElementById("cursoLetraInput").value = "";
-            document.getElementById("cursoNumeroInput").value = "";
-            document.getElementById("materiaInput").value = "";
-            document.getElementById("añoInput").value = "";
-        }
+            document.getElementById("modeloInput").value = "";
+            document.getElementById("añoFabricacionInput").value = "";
+            document.getElementById("velocidadMaximaInput").value = "";
+            document.getElementById("autonomiaInput").value = "";
+            document.getElementById("alturaMaximaInput").value = "";
+            document.getElementById("cantidadPuertasInput").value = "";
+            document.getElementById("cantidadRuedasInput").value = "";
+        };
 
         function ocultarForm() {
             limpiarForm();
             document.getElementById('divAlta').style.display = 'none';
-        }
+        };
+
+        function modificarInputSelect() {
+            if (document.getElementById('tipoInput').value == 'terrestre') {
+                document.getElementById('divAereoInput').style.display = "none";
+                document.getElementById('divTerrestreInput').style.display = "block";
+            }
+            else {
+                document.getElementById('divAereoInput').style.display = "block";
+                document.getElementById('divTerrestreInput').style.display = "none";
+            }
+        };
+
+        function showFormModificar() {
+            modificarInputSelect();
+            document.getElementById('divAlta').style.display = "block";
+            document.getElementById('btnAgregarAlta').disabled = true;
+            document.getElementById('btnModificar').disabled = false;
+            document.getElementById('btnEliminar').disabled = false;
+        };
+
+        function Modificar() {
+            document.getElementById("formAlta").style.display = "block";
+
+            let tr = event.target.parentNode;
+            let id = document.getElementById("idInput");
+            let modelo = document.getElementById("modeloInput");
+            let añoFabricacion = document.getElementById("añoFabricacionInput");
+            let velocidadMaxima = document.getElementById("velocidadMaximaInput");
+            let autonomia = document.getElementById("autonomiaInput");
+            let alturaMaxima = document.getElementById("alturaMaximaInput");
+            let cantidadPuertas = document.getElementById("cantidadPuertasInput");
+            let cantidadRuedas = document.getElementById("cantidadRuedasInput");
+
+
+            let selectTipo = document.getElementById("filter");
+            let selectTipoInput = document.getElementById("tipoInput");
+
+            selectTipoInput.disabled = true;
+            let inputs = [id, modelo, añoFabricacion, velocidadMaxima, autonomia, alturaMaxima, cantidadPuertas, cantidadRuedas];
+
+            switch (selectTipo.value) {
+                case 'Aereo':
+                    selectTipoInput.value = 'aereo';
+                    break;
+                case 'Terrestre':
+                    selectTipoInput.value = 'terrestre';
+                    break;
+                case 'Todos':
+                    if (tr.children[4].innerHTML == 'N/A') {
+                        selectTipoInput.value = 'terrestre';
+
+                    } else {
+                        selectTipoInput.value = 'aereo';
+                    }
+                    break;
+            }
+            inputs[0].readOnly = true;
+            for (let i = 0; i < 8; i++) {
+                inputs[i].value = tr.children[i].innerHTML;
+            }
+            showFormModificar();
+        };
     </script>
+    <title>Primer Recuperatorio Primer Parcial</title>
+
 </head>
 
 <body>
-    <div>
-        <h1>Form Datos</h1>
+    <div class="content">
+        <h1 class="titulo">Form Datos</h1>
         <div>
             <label>Filtrar por: </label>
-            <select id="filter" name="personas" onchange="modificarTablaSelect();">
+            <select id="filter" name="vehiculos" onchange="modificarTablaSelect();">
                 <option value="Todos">Todos</option>
-                <option value="Alumno">Alumnos</option>
-                <option value="Docente">Docentes</option>
+                <option value="Aereo">Aereo</option>
+                <option value="Terrestre">Terrestre</option>
             </select>
         </div>
         <br>
         <div>
-            <label>Valor Promedio IDs: </label>
-            <input type="text" id="promedioId" readonly style="text-align: right;">
-            <input type="button" value="calcular" id="btnCalcular" onclick="mostrarPromedioIds();">
+            <input type="checkbox" id="id" value="id" checked onclick="modificarTabla('id');">
+            <label> id </label>
+            <input type="checkbox" id="modelo" value="modelo" checked onclick="modificarTabla('modelo');">
+            <label> modelo </label>
+            <input type="checkbox" id="añoFabricacion" value="añoFabricacion" checked
+                onclick="modificarTabla('añoFabricacion', 'idThañoFabricacion');">
+            <label> Año Fabricacion</label>
+            <input type="checkbox" id="velocidadMaxima" value="velocidadMaxima" checked
+                onclick="modificarTabla('velocidadMaxima');">
+            <label> Velocidad Maxima </label>
+            <input type="checkbox" id="alturaMaxima" value="alturaMaxima" checked
+                onclick="modificarTabla('alturaMaxima');">
+            <label> Altura Maxima </label>
+            <input type="checkbox" id="autonomia" value="autonomia" checked onclick="modificarTabla('autonomia');">
+            <label> Autonomia </label>
+            <input type="checkbox" id="cantidadPuertas" value="cantidadPuertas" checked
+                onclick="modificarTabla('cantidadPuertas');">
+            <label> Cantidad Puertas </label>
+            <input type="checkbox" id="cantidadRuedas" value="cantidadRuedas" checked
+                onclick="modificarTabla('cantidadRuedas');">
+            <label> Cantidad Ruedas </label>
         </div>
         <br>
         <div>
-            <input type="checkbox" id="id" value="id" checked onclick="modificarTabla('id');">
-            <label> ID </label>
-            <input type="checkbox" id="dni" value="dni" checked onclick="modificarTabla('dni');">
-            <label> DNI </label>
-            <input type="checkbox" id="apellido" value="apellido" checked
-                onclick="modificarTabla('apellido', 'idThApellido');">
-            <label> APELLIDO</label>
-            <input type="checkbox" id="nombre" value="nombre" checked onclick="modificarTabla('nombre');">
-            <label> NOMBRE </label>
-            <input type="checkbox" id="cursoNumero" value="cursoNumero" checked
-                onclick="modificarTabla('cursoNumero');">
-            <label> CURSO NUMERO </label>
-            <input type="checkbox" id="cursoLetra" value="cursoLetra" checked onclick="modificarTabla('cursoLetra');">
-            <label> CURSO LETRA </label>
-            <input type="checkbox" id="materia" value="materia" checked onclick="modificarTabla('materia');">
-            <label> MATERIA </label>
-            <input type="checkbox" id="año" value="año" checked onclick="modificarTabla('año');">
-            <label> AÑO </label>
+            <label>Promedio Velocidad Maxima: </label>
+            <input type="text" id="promedioId" readonly style="text-align: right;">
+            <input type="button" value="calcular" id="btnCalcular" class="boton" onclick="mostrarPromedioIds();">
         </div>
         <br>
         <div id="divTabla"></div>
-        <input type="button" value="Agregar" id="btnAgregar" onclick="mostrarFormAlta();">
+        <input type="button" value="Agregar" id="btnAgregar" class="boton" onclick="mostrarFormAlta();">
 
-        <div id="divAlta" style="display: none;">
-            <form id="formAlta" method="post">
-                <h2>Form Modificacion/Eliminacion</h2>
-                <label>Id:</label>
-                <br>
-                <input type="text" id="idInput" required>
-
-                <br>
-                <label>Dni:</label>
-                <br>
-                <input type="text" id="dniInput" required>
+        <div id="divAlta" class="alta">
+            <form id="formAlta" method="post" class="form">
+                <h2 style="text-align: center;">Form ABM</h2>
+                <label class="inpurForm">Id:</label>
+                <input type="text" id="idInput" readonly>
 
                 <br>
-                <label>Apellido:</label>
-                <br>
-                <input type="text" id="apellidoInput" required>
+                <label class="inpurForm">Modelo:</label>
+                <input type="text" id="modeloInput" required>
 
                 <br>
-                <label>Nombre:</label>
+                <label class="inpurForm">Año Fabricacion:</label>
+                <input type="number" id="añoFabricacionInput" required>
+
                 <br>
-                <input type="text" id="nombreInput" required>
+                <label class="inpurForm">velocidad Maxima:</label>
+                <input type="number" id="velocidadMaximaInput" required>
 
                 <br>
                 <br>
-                <label>Tipo:</label>
-                <select name="tipoInput" id="tipoInput" required>
-                    <option value="alumno" selected="selected">Alumno</option>
-                    <option value="docente">Docente</option>
+                <label class="inpurForm">Tipo:</label>
+                <select name="tipoInput" id="tipoInput" required onchange="modificarInputSelect();">
+                    <option value="aereo" selected="selected">Aereo</option>
+                    <option value="terrestre">Terrestre</option>
                 </select>
 
-                <div>
+                <div id="divAereoInput">
                     <br>
-                    <label>Curso letra:</label>
-                    <br>
-                    <input type="text" id="cursoLetraInput">
+                    <label id="lblalturaMaxima" class="inpurForm">Altura Maxima:</label>
+                    <input type="number" id="alturaMaximaInput">
 
                     <br>
-                    <label id="lblCursoNumero">Curso Numero:</label>
-                    <br>
-                    <input type="number" id="cursoNumeroInput">
+                    <label id="lblAutonomia" class="inpurForm">Autonomia:</label>
+                    <input type="number" id="autonomiaInput">
                 </div>
 
-                <div>
+                <div id="divTerrestreInput">
                     <br>
-                    <label>Materia:</label>
-                    <br>
-                    <input type="text" id="materiaInput">
+                    <label class="inpurForm">Cantidad Puertas:</label>
+                    <input type="number" id="cantidadPuertasInput">
 
                     <br>
-                    <label>Año:</label>
-                    <br>
-                    <input type="number" id="añoInput">
+                    <label class="inpurForm">Cantidad Ruedas:</label>
+                    <input type="number" id="cantidadRuedasInput">
                 </div>
 
                 <br>
-                <input type="submit" id="btnAgregarAlta" value="Agregar" onclick="altaPersona();">;
-                <input type="button" id="btnModificar" value="Modificar">
-                <input type="button" id="btnEliminar" value="Eliminar">
-                <input type="button" id="btnCancelar" value="Cancelar" onclick="ocultarForm();">
+                <div>
+                    <input type="button" id="btnAgregarAlta" value="Agregar" onclick="altaVehiculo();">
+                    <input type="button" id="btnModificar" value="Modificar" onclick="modificarVehiculo();">
+                    <input type="button" id="btnEliminar" value="Eliminar" onclick="bajaVehiculo();">
+                    <input type="button" id="btnCancelar" value="Cancelar" onclick="ocultarForm();">
+                </div>
             </form>
 
         </div>
     </div>
 </body>
-<footer>
-
-</footer>
 
 </html>
